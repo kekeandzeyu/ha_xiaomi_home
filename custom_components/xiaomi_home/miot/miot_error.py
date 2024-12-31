@@ -46,6 +46,7 @@ off Xiaomi or its affiliates' products.
 MIoT error code and exception.
 """
 from enum import Enum
+from typing import Any
 
 
 class MIoTErrorCode(Enum):
@@ -73,15 +74,16 @@ class MIoTErrorCode(Enum):
     # Config flow error code, -10100
     # Options flow error code , -10110
     # MIoT lan error code, -10120
+    CODE_LAN_UNAVAILABLE = -10120
 
 
 class MIoTError(Exception):
     """MIoT error."""
     code: MIoTErrorCode
-    message: any
+    message: Any
 
     def __init__(
-        self,  message: any, code: MIoTErrorCode = MIoTErrorCode.CODE_UNKNOWN
+        self,  message: Any, code: MIoTErrorCode = MIoTErrorCode.CODE_UNKNOWN
     ) -> None:
         self.message = message
         self.code = code
@@ -139,4 +141,8 @@ class MIoTConfigError(MIoTError):
 
 
 class MIoTOptionsError(MIoTError):
+    ...
+
+
+class MIoTLanError(MIoTError):
     ...

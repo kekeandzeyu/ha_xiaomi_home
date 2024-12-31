@@ -48,9 +48,9 @@ Common utilities.
 import json
 from os import path
 import random
-from typing import Optional
+from typing import Any, Optional
 import hashlib
-from paho.mqtt.client import MQTTMatcher
+from paho.mqtt.matcher import MQTTMatcher
 import yaml
 
 MIOT_ROOT_PATH: str = path.dirname(path.abspath(__file__))
@@ -83,11 +83,14 @@ def randomize_int(value: int, ratio: float) -> int:
     """Randomize an integer value."""
     return int(value * (1 - ratio + random.random()*2*ratio))
 
+def randomize_float(value: float, ratio: float) -> float:
+    """Randomize a float value."""
+    return value * (1 - ratio + random.random()*2*ratio)
 
 class MIoTMatcher(MQTTMatcher):
     """MIoT Pub/Sub topic matcher."""
 
-    def iter_all_nodes(self) -> any:
+    def iter_all_nodes(self) -> Any:
         """Return an iterator on all nodes with their paths and contents."""
         def rec(node, path_):
             # pylint: disable=protected-access
@@ -97,7 +100,7 @@ class MIoTMatcher(MQTTMatcher):
                 yield from rec(child, path_ + [part])
         return rec(self._root, [])
 
-    def get(self, topic: str) -> Optional[any]:
+    def get(self, topic: str) -> Optional[Any]:
         try:
             return self[topic]
         except KeyError:
